@@ -1,7 +1,7 @@
 ### **Classification Model Development for Astronomical Objects Using SDSS Data**
 
 #### Brief Project Description
-The project aims to conduct an in-depth feature importance analysis to determine which attributes are most influential in classifying astronomical objects—specifically stars, galaxies, and quasars—using the Sloan Digital Sky Survey (SDSS) DR17 dataset. Following this analysis, we will develop and evaluate machine learning models to classify these objects based on the most critical features identified. This project integrates data preprocessing, exploratory data analysis (EDA), feature importance evaluation, model development, and performance evaluation, culminating in a robust, interpretable classification model and comprehensive visualizations.
+The objective of this project is to perform a thorough feature importance analysis to identify the attributes that play a pivotal role in classifying astronomical objects, specifically stars, galaxies, and quasars, using the Sloan Digital Sky Survey (SDSS) DR17 dataset. Building on this analysis, we will develop and assess machine learning models to classify these objects based on the most influential features identified. The project encompasses data preprocessing, exploratory data analysis (EDA), feature importance assessment, model development, and performance evaluation.
 
 ### Detailed Introduction to Stellar Classification
 
@@ -496,7 +496,9 @@ plt.show()
 | XGBoost         | 0.974823 | 0.967120              | 0.949445            | 0.957877             |
 | Decision Tree   | 0.962089 | 0.938322              | 0.932451            | 0.935347             |
 <Figure size 1200x600 with 0 Axes>
->  ![Graph 2](/Graphs/Graph_2.png)
+
+
+![Graph 2](/Graphs/Graph_2.png)
 
 ### Model Performance Evaluation
 
