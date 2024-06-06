@@ -137,3 +137,5 @@ for i, column in enumerate(numeric_columns, 1):
 plt.tight_layout()
 plt.show()
 ```
+![Box Plot](/Graphs/boxplot_1.png)
+Format: ![Alt Text](url)
