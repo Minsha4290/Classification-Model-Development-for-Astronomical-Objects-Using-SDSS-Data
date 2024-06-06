@@ -138,4 +138,61 @@ plt.tight_layout()
 plt.show()
 ```
 ![Box Plot](/Graphs/boxplot_1.png)
-Format: ![Alt Text](url)
+
+```python
+def remove_outliers(df, columns):
+    Q1 = df[columns].quantile(0.25)
+    Q3 = df[columns].quantile(0.75)
+    IQR = Q3 - Q1
+    for column in columns:
+        lower_bound = Q1[column] - 1.5 * IQR[column]
+        upper_bound = Q3[column] + 1.5 * IQR[column]
+        df = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+    return df
+dataset_cleaned = remove_outliers(dataset, numeric_columns)
+```
+
+```python
+print(f"Original dataset shape: {dataset.shape}")
+print(f"Dataset shape after removing outliers: {dataset_cleaned.shape}")
+plt.figure(figsize=(15, 10))
+for i, column in enumerate(numeric_columns, 1):
+    plt.subplot(5, 4, i)
+    sns.boxplot(data=dataset_cleaned, x=column)
+    plt.title(f'Boxplot of {column} (Cleaned)')
+plt.tight_layout()
+plt.show()
+```
+>Original dataset shape: (100000, 18)
+Dataset shape after removing outliers: (85595, 18)
+![Box Plot](/Graphs/boxplot_2.png)
+
+# Exploratory Data Analysis
+```python
+# Converting 'class' column to numerical values
+class_mapping = {'GALAXY': 0, 'STAR': 1, 'QSO': 2}
+dataset_cleaned['class'] = dataset_cleaned['class'].map(class_mapping)
+```
+```python
+dataset_cleaned = dataset_cleaned.drop(["obj_ID", "rerun_ID"], axis=1)
+```
+```python
+# Mapping of class numbers to names
+class_labels = {0: 'Galaxy', 1: 'Star', 2: 'Quasar'}
+
+def plot_histogram(column):
+    plt.figure(figsize=(10, 6))
+    colors = ['purple', 'brown', 'cyan']
+    for i in range(3):
+        sns.histplot(dataset_cleaned[dataset_cleaned['class'] == i][column], kde=True, label=class_labels[i], color=colors[i])
+    plt.title(f"Histogram of {column}")
+    plt.legend()
+    plt.show()
+
+# Columns to Visualize
+columns_to_plot = ["alpha", "delta", "u", "g", "r", "i", "z", "redshift"]
+
+# Plotting histograms
+for column in columns_to_plot:
+    plot_histogram(column)
+```
