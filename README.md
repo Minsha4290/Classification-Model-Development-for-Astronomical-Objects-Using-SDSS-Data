@@ -215,3 +215,135 @@ for column in columns_to_plot:
 ![Histogram 7](/Graphs/histogram_7.png)
 ![Histogram 8](/Graphs/histogram_8.png)
 
+### EDA Report Report
+
+#### Correlation Overview
+Correlation values range from -1 to 1, where values close to 1 indicate strong positive correlation, values close to -1 indicate strong negative correlation, and values close to 0 indicate little to no correlation.
+
+#### Key Findings
+
+1. **Photometric Filters Correlation**
+   - The **u**, **g**, **r**, **i**, and **z** filters show very high positive correlations with each other:
+     - **u** and **g**: 0.859
+     - **g** and **r**: 0.943
+     - **r** and **i**: 0.968
+     - **i** and **z**: 0.973
+   - This strong correlation is expected as these filters capture light across different but closely related wavelengths, indicating that brighter objects in one filter tend to be brighter in others as well.
+
+2. **Redshift Correlation**
+   - The **redshift** feature has a moderate correlation with the photometric filters:
+     - **redshift** and **u**: 0.331
+     - **redshift** and **g**: 0.523
+     - **redshift** and **r**: 0.567
+     - **redshift** and **i**: 0.573
+     - **redshift** and **z**: 0.560
+   - These correlations suggest that objects with higher redshifts (indicating they are farther away) tend to have specific photometric characteristics.
+
+3. **Class Correlation**
+   - The **class** feature, representing different types of celestial objects (Galaxy, Star, Quasar), shows various degrees of correlation with other features:
+     - **class** and **u**: -0.263
+     - **class** and **g**: -0.127
+     - **class** and **r**: 0.052
+     - **class** and **i**: 0.170
+     - **class** and **z**: 0.230
+   - This indicates that different classes of objects have distinct photometric properties, which is crucial for classification tasks.
+
+### Histogram Summary
+The feature statistics provide insightful distinctions among the three astronomical classes: Galaxy, Star, and Quasar. The most noteworthy differences are observed in the redshift values, where galaxies exhibit a mean redshift of 0.4250, stars show a negligible mean redshift of approximately -0.0001, and quasars have a significantly higher mean redshift of 1.0794. This aligns with the understanding that quasars are typically more distant objects compared to galaxies and stars.
+
+In terms of spatial coordinates, the right ascension (alpha) and declination (delta) values are broadly similar across the classes, although slight variations exist. For example, quasars have a marginally higher mean declination (27.9803) compared to galaxies (24.3403) and stars (24.2520).
+
+Photometric features (u, g, r, i, z) reveal that stars generally have lower mean values, indicating they are often brighter in the optical and near-infrared bands. Quasars show higher mean values in these bands, reflecting their distinct spectral characteristics.
+
+# Feature Importance Analysis
+## Introduction to Feature Importance Methods
+Feature importance analysis is a crucial step in machine learning projects, especially when dealing with complex datasets. It helps to identify which features (or variables) have the most significant impact on the predictions made by a model. Understanding feature importance not only aids in building more accurate models but also provides insights into the underlying data.
+
+### Random Forest Feature Importances
+Random Forest is an ensemble learning method that constructs multiple decision trees during training and combines their outputs to improve predictive accuracy and control overfitting. Random Forests can be used to rank the importance of features in a dataset.
+
+1. Tree Construction: During training, the Random Forest algorithm builds several decision trees using different subsets of the data and features.
+2. Gini Importance (or Mean Decrease Impurity): Each time a feature is used to split a node in a tree, the algorithm calculates how much the split reduces the impurity (e.g., Gini impurity) in the tree. The feature’s importance is then averaged across all trees in the forest.
+3. Feature Ranking: Features that reduce impurity the most across many trees are considered more important.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+X = dataset_cleaned.drop(columns=['class'])  # Assuming 'target_variable' is the name of your target column
+y = dataset_cleaned['class']
+# Train the model using a subset of data for faster computation
+rf_model_small = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model_small.fit(X, y)
+```
+> RandomForestClassifier RandomForestClassifier(random_state=42)
+
+```python
+importances = rf_model_small.feature_importances_
+
+# Convert to logarithmic scale
+log_importances = np.log1p(importances)  # Using log1p for numerical stability
+
+feature_importance = pd.DataFrame(list(zip(X.columns, log_importances)), columns=['Feature', 'Log Importance'])
+feature_importance = feature_importance.sort_values(by='Log Importance', ascending=False)
+print(feature_importance)
+```
+| Feature      | Log Importance |
+|--------------|----------------|
+| redshift     | 0.458741       |
+| u            | 0.068602       |
+| z            | 0.065757       |
+| g            | 0.057536       |
+| i            | 0.038234       |
+| spec_obj_ID  | 0.036179       |
+| plate        | 0.034419       |
+| r            | 0.034233       |
+| MJD          | 0.022237       |
+| alpha        | 0.012469       |
+| delta        | 0.012381       |
+| run_ID       | 0.009682       |
+| fiber_ID     | 0.007279       |
+| field_ID     | 0.006484       |
+| cam_col      | 0.003023       |
+
+```python
+
+# Plot feature importances
+plt.figure(figsize=(10, 6))
+plt.barh(feature_importance['Feature'], feature_importance['Log Importance'])
+plt.xlabel('Log Importance')
+plt.ylabel('Feature')
+plt.title('Feature Importances (Log Scale)')
+plt.gca().invert_yaxis()
+plt.show()
+```
+![Histogram 8](/Graphs/Graph_1.png)
+
+
+### Feature Importance Analysis Report
+
+#### Result
+
+A RandomForestClassifier was trained on the entire dataset, and the importance of each feature was calculated. The feature importance values were then log-transformed using the natural logarithm (log1p) for better numerical stability and interpretability. The following table presents the log-transformed importance values for each feature:
+
+| Feature      | Log Importance |
+|--------------|----------------|
+| redshift     | 0.458741       |
+| u            | 0.068602       |
+| z            | 0.065757       |
+| g            | 0.057536       |
+| i            | 0.038234       |
+| spec_obj_ID  | 0.036179       |
+| plate        | 0.034419       |
+| r            | 0.034233       |
+| MJD          | 0.022237       |
+| alpha        | 0.012469       |
+| delta        | 0.012381       |
+| run_ID       | 0.009682       |
+| fiber_ID     | 0.007279       |
+| field_ID     | 0.006484       |
+| cam_col      | 0.003023       |
+
+#### Analysis
+
+Conclusion
+The feature importance analysis highlights **redshift** as the most critical feature, reflecting its fundamental role in astrophysics for measuring distances and velocities of celestial objects. Other significant features (**u**, **z**, **g**, and **i** bands) provide valuable information about the stellar populations and star formation activities in galaxies. The remaining features, although less important, contribute to the observational context and the identification of objects. This analysis underscores the importance of specific physical properties and their measurements in understanding the universe's structure and evolution.
