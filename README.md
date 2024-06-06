@@ -549,13 +549,3 @@ The performance of each model is summarized in the table below:
 Based on the evaluation metrics, the Random Forest and XGBoost models outperform the Decision Tree model in terms of accuracy, precision, recall, and F1-score. Both Random Forest and XGBoost provide highly accurate classifications, but Random Forest has a slight edge in overall performance. Decision Tree, while still a viable model, does not perform as well as the other two models.
 
 For practical applications, either Random Forest or XGBoost can be recommended for the classification of celestial objects, with Random Forest being the slightly preferred choice due to its marginally better performance.
-
-#### 6. Future Work
-
-Further improvements can be achieved by:
-
-- Hyperparameter tuning to optimize model performance.
-- Exploring additional models or ensemble techniques.
-- Utilizing more advanced techniques such as deep learning for potentially better accuracy.
-
-By incorporating these strategies, it is possible to enhance the classification performance even further.
