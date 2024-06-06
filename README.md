@@ -177,6 +177,16 @@ dataset_cleaned['class'] = dataset_cleaned['class'].map(class_mapping)
 dataset_cleaned = dataset_cleaned.drop(["obj_ID", "rerun_ID"], axis=1)
 ```
 ```python
+# Correlation matrix
+plt.figure(figsize=(12, 10))
+correlation_matrix = dataset_cleaned.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='Spectral', fmt=".2f")
+plt.title("Correlation Matrix")
+plt.show()
+```
+![Correlation Matrix](/Graphs/corr_matrix_1.png)
+
+```python
 # Mapping of class numbers to names
 class_labels = {0: 'Galaxy', 1: 'Star', 2: 'Quasar'}
 
@@ -196,3 +206,12 @@ columns_to_plot = ["alpha", "delta", "u", "g", "r", "i", "z", "redshift"]
 for column in columns_to_plot:
     plot_histogram(column)
 ```
+![Histogram 1](/Graphs/histogram_1.png)
+![Histogram 2](/Graphs/histogram_2.png)
+![Histogram 3](/Graphs/histogram_3.png)
+![Histogram 4](/Graphs/histogram_4.png)
+![Histogram 5](/Graphs/histogram_5.png)
+![Histogram 6](/Graphs/histogram_6.png)
+![Histogram 7](/Graphs/histogram_7.png)
+![Histogram 8](/Graphs/histogram_8.png)
+
