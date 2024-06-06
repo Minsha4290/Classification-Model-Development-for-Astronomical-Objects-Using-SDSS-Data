@@ -137,7 +137,7 @@ for i, column in enumerate(numeric_columns, 1):
 plt.tight_layout()
 plt.show()
 ```
-![Box Plot](/Graphs/boxplot_1.png)
+> ![Box Plot](/Graphs/boxplot_1.png)
 
 ```python
 def remove_outliers(df, columns):
@@ -165,7 +165,7 @@ plt.show()
 ```
 >Original dataset shape: (100000, 18)
 Dataset shape after removing outliers: (85595, 18)
-![Box Plot](/Graphs/boxplot_2.png)
+> ![Box Plot](/Graphs/boxplot_2.png)
 
 # Exploratory Data Analysis
 ```python
@@ -184,7 +184,7 @@ sns.heatmap(correlation_matrix, annot=True, cmap='Spectral', fmt=".2f")
 plt.title("Correlation Matrix")
 plt.show()
 ```
-![Correlation Matrix](/Graphs/corr_matrix_1.png)
+> ![Correlation Matrix](/Graphs/corr_matrix_1.png)
 
 ```python
 # Mapping of class numbers to names
@@ -206,14 +206,14 @@ columns_to_plot = ["alpha", "delta", "u", "g", "r", "i", "z", "redshift"]
 for column in columns_to_plot:
     plot_histogram(column)
 ```
-![Histogram 1](/Graphs/histogram_1.png)
-![Histogram 2](/Graphs/histogram_2.png)
-![Histogram 3](/Graphs/histogram_3.png)
-![Histogram 4](/Graphs/histogram_4.png)
-![Histogram 5](/Graphs/histogram_5.png)
-![Histogram 6](/Graphs/histogram_6.png)
-![Histogram 7](/Graphs/histogram_7.png)
-![Histogram 8](/Graphs/histogram_8.png)
+> ![Histogram 1](/Graphs/histogram_1.png)
+> ![Histogram 2](/Graphs/histogram_2.png)
+> ![Histogram 3](/Graphs/histogram_3.png)
+> ![Histogram 4](/Graphs/histogram_4.png)
+> ![Histogram 5](/Graphs/histogram_5.png)
+> ![Histogram 6](/Graphs/histogram_6.png)
+> ![Histogram 7](/Graphs/histogram_7.png)
+> ![Histogram 8](/Graphs/histogram_8.png)
 
 ### EDA Report Report
 
@@ -316,7 +316,7 @@ plt.title('Feature Importances (Log Scale)')
 plt.gca().invert_yaxis()
 plt.show()
 ```
-![Histogram 8](/Graphs/Graph_1.png)
+> ![Graph 1](/Graphs/Graph_1.png)
 
 
 ### Feature Importance Analysis Report
@@ -399,3 +399,163 @@ y_pred_rf = rf.predict(X_test)
 print("Random Forest Accuracy:", accuracy_score(y_test, y_pred_rf))
 print(classification_report(y_test, y_pred_rf))
 ```
+**Random Forest Accuracy**: 0.9754658566505053
+
+| Class | Precision | Recall | F1-Score | Support |
+|-------|-----------|--------|----------|---------|
+| 0     | 0.98      | 0.99   | 0.98     | 11073   |
+| 1     | 0.99      | 1.00   | 0.99     | 4113    |
+| 2     | 0.94      | 0.86   | 0.90     | 1933    |
+| **Accuracy**    |           |        |          | 17119   |
+| **Macro Avg**   | 0.97      | 0.95   | 0.96     | 17119   |
+| **Weighted Avg**| 0.98      | 0.98   | 0.98     | 17119   |
+
+```python
+import xgboost as xgb
+
+# Train XGBoost model
+xgb_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss', random_state=42)
+xgb_model.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred_xgb = xgb_model.predict(X_test)
+print("XGBoost Accuracy:", accuracy_score(y_test, y_pred_xgb))
+print(classification_report(y_test, y_pred_xgb))
+```
+**XGBoost Accuracy**: 0.9748232957532567
+
+| Class          | Precision | Recall | F1-Score | Support |
+|----------------|-----------|--------|----------|---------|
+| 0              | 0.97      | 0.99   | 0.98     | 11073   |
+| 1              | 0.99      | 0.99   | 0.99     | 4113    |
+| 2              | 0.93      | 0.87   | 0.90     | 1933    |
+| **Accuracy**   |           |        |          | 17119   |
+| **Macro Avg**  | 0.97      | 0.95   | 0.96     | 17119   |
+| **Weighted Avg**| 0.97     | 0.97   | 0.97     | 17119   |
+
+
+#Model Evaluation
+To properly evaluate the performance of your models, we'll consider several metrics:
+
+1. Accuracy: The proportion of correctly classified instances.
+2. Precision: The proportion of true positive results among all positive predictions.
+3. Recall (Sensitivity): The proportion of true positive results among all actual positives.
+4. F1-score: The harmonic mean of precision and recall, providing a single metric that balances both.
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+from sklearn.metrics import accuracy_score, classification_report
+```
+```python
+# Collect the evaluation metrics
+metrics = {
+    "Model": ["Random Forest", "XGBoost", "Decision Tree"],
+    "Accuracy": [
+        accuracy_score(y_test, y_pred_rf),
+        accuracy_score(y_test, y_pred_xgb),
+        accuracy_score(y_test, y_pred_dt)
+    ],
+    "Precision (macro avg)": [
+        classification_report(y_test, y_pred_rf, output_dict=True)['macro avg']['precision'],
+        classification_report(y_test, y_pred_xgb, output_dict=True)['macro avg']['precision'],
+        classification_report(y_test, y_pred_dt, output_dict=True)['macro avg']['precision']
+    ],
+    "Recall (macro avg)": [
+        classification_report(y_test, y_pred_rf, output_dict=True)['macro avg']['recall'],
+        classification_report(y_test, y_pred_xgb, output_dict=True)['macro avg']['recall'],
+        classification_report(y_test, y_pred_dt, output_dict=True)['macro avg']['recall']
+    ],
+    "F1-score (macro avg)": [
+        classification_report(y_test, y_pred_rf, output_dict=True)['macro avg']['f1-score'],
+        classification_report(y_test, y_pred_xgb, output_dict=True)['macro avg']['f1-score'],
+        classification_report(y_test, y_pred_dt, output_dict=True)['macro avg']['f1-score']
+    ]
+}
+```
+```python
+metrics_df = pd.DataFrame(metrics)
+print(metrics_df)
+
+# Plot the metrics with custom y-axis range
+plt.figure(figsize=(12, 6))
+metrics_df.set_index('Model').plot(kind='bar', figsize=(14, 8))
+
+plt.ylim([0.85, 1.0])  # Setting the y-axis range to better visualize small differences
+plt.title('Comparison of Model Performance Metrics')
+plt.ylabel('Score')
+plt.xlabel('Model')
+plt.xticks(rotation=0)  # Keep the x-axis labels horizontal
+plt.legend(loc='lower right')
+plt.show()
+```
+| Model           | Accuracy | Precision (macro avg) | Recall (macro avg) | F1-Score (macro avg) |
+|-----------------|----------|-----------------------|---------------------|----------------------|
+| Random Forest   | 0.975466 | 0.968523              | 0.949870            | 0.958615             |
+| XGBoost         | 0.974823 | 0.967120              | 0.949445            | 0.957877             |
+| Decision Tree   | 0.962089 | 0.938322              | 0.932451            | 0.935347             |
+<Figure size 1200x600 with 0 Axes>
+>  ![Graph 2](/Graphs/Graph_2.png)
+
+### Model Performance Evaluation
+
+#### 1. Introduction
+
+This report presents the performance evaluation of three different classification models: Random Forest, XGBoost, and Decision Tree. These models were trained and tested on the dataset to classify celestial objects into three categories based on their features. The primary evaluation metrics used are Accuracy, Precision (macro average), Recall (macro average), and F1-score (macro average).
+
+#### 2. Evaluation Metrics
+
+- **Accuracy**: The proportion of true results (both true positives and true negatives) among the total number of cases examined.
+- **Precision (macro average)**: The average precision across all classes, treating each class equally.
+- **Recall (macro average)**: The average recall across all classes, treating each class equally.
+- **F1-score (macro average)**: The harmonic mean of precision and recall, providing a balance between the two metrics.
+
+#### 3. Model Performance
+
+The performance of each model is summarized in the table below:
+
+| Model           | Accuracy | Precision (macro avg) | Recall (macro avg) | F1-score (macro avg) |
+|------------------|----------|-----------------------|---------------------|----------------------|
+| Random Forest    | 0.975466 | 0.968523              | 0.949870            | 0.958615             |
+| XGBoost          | 0.974823 | 0.967120              | 0.949445            | 0.957877             |
+| Decision Tree    | 0.962089 | 0.938322              | 0.932451            | 0.935347             |
+
+#### 4. Detailed Analysis
+
+- **Random Forest**:
+  - **Accuracy**: 0.975466
+  - **Precision (macro avg)**: 0.968523
+  - **Recall (macro avg)**: 0.949870
+  - **F1-score (macro avg)**: 0.958615
+  - The Random Forest model achieved the highest accuracy, precision, recall, and F1-score among the three models. This indicates that the model is highly effective in correctly classifying the celestial objects while maintaining a balance between precision and recall.
+
+- **XGBoost**:
+  - **Accuracy**: 0.974823
+  - **Precision (macro avg)**: 0.967120
+  - **Recall (macro avg)**: 0.949445
+  - **F1-score (macro avg)**: 0.957877
+  - The XGBoost model performed very similarly to the Random Forest model, with only slight differences in the evaluation metrics. This suggests that XGBoost is also a robust model for this classification task.
+
+- **Decision Tree**:
+  - **Accuracy**: 0.962089
+  - **Precision (macro avg)**: 0.938322
+  - **Recall (macro avg)**: 0.932451
+  - **F1-score (macro avg)**: 0.935347
+  - The Decision Tree model had the lowest performance metrics among the three models. While it still performed well, it was less effective than Random Forest and XGBoost in accurately classifying the celestial objects.
+
+#### 5. Conclusion
+
+Based on the evaluation metrics, the Random Forest and XGBoost models outperform the Decision Tree model in terms of accuracy, precision, recall, and F1-score. Both Random Forest and XGBoost provide highly accurate classifications, but Random Forest has a slight edge in overall performance. Decision Tree, while still a viable model, does not perform as well as the other two models.
+
+For practical applications, either Random Forest or XGBoost can be recommended for the classification of celestial objects, with Random Forest being the slightly preferred choice due to its marginally better performance.
+
+#### 6. Future Work
+
+Further improvements can be achieved by:
+
+- Hyperparameter tuning to optimize model performance.
+- Exploring additional models or ensemble techniques.
+- Utilizing more advanced techniques such as deep learning for potentially better accuracy.
+
+By incorporating these strategies, it is possible to enhance the classification performance even further.
