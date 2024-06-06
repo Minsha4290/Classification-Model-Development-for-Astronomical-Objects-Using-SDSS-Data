@@ -347,3 +347,55 @@ A RandomForestClassifier was trained on the entire dataset, and the importance o
 
 Conclusion
 The feature importance analysis highlights **redshift** as the most critical feature, reflecting its fundamental role in astrophysics for measuring distances and velocities of celestial objects. Other significant features (**u**, **z**, **g**, and **i** bands) provide valuable information about the stellar populations and star formation activities in galaxies. The remaining features, although less important, contribute to the observational context and the identification of objects. This analysis underscores the importance of specific physical properties and their measurements in understanding the universe's structure and evolution.
+
+# Model Development
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Assuming X and y are your feature matrix and target vector
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f"Training set size: {X_train.shape[0]}")
+print(f"Testing set size: {X_test.shape[0]}")
+```
+> Training set size: 68476
+> Testing set size: 17119
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+
+# Train Decision Tree model
+dt = DecisionTreeClassifier(random_state=42)
+dt.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred_dt = dt.predict(X_test)
+print("Decision Tree Accuracy:", accuracy_score(y_test, y_pred_dt))
+print(classification_report(y_test, y_pred_dt))
+```
+**Decision Tree Accuracy**: 0.9620889070623284
+
+| Class | Precision | Recall | F1-Score | Support |
+|-------|-----------|--------|----------|---------|
+| 0     | 0.97      | 0.97   | 0.97     | 11073   |
+| 1     | 1.00      | 0.99   | 1.00     | 4113    |
+| 2     | 0.85      | 0.83   | 0.84     | 1933    |
+| **Accuracy**    |           |        |          | 17119   |
+| **Macro Avg**   | 0.94      | 0.93   | 0.94     | 17119   |
+| **Weighted Avg**| 0.96      | 0.96   | 0.96     | 17119   |
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+# Train Random Forest model
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+# Predict and evaluate
+y_pred_rf = rf.predict(X_test)
+print("Random Forest Accuracy:", accuracy_score(y_test, y_pred_rf))
+print(classification_report(y_test, y_pred_rf))
+```
